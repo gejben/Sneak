@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Egnine\ControllerInput.cpp" />
+    <ClCompile Include="src\Egnine\Engine.cpp" />
+    <ClCompile Include="src\Egnine\GameState.cpp" />
+    <ClCompile Include="src\Egnine\Graphics.cpp" />
+    <ClCompile Include="src\Egnine\Input.cpp" />
+    <ClCompile Include="src\Egnine\Sprite.cpp" />
+    <ClCompile Include="src\Egnine\Timer.cpp" />
+    <ClCompile Include="src\Egnine\Vector3.cpp" />
+    <ClCompile Include="src\Egnine\WinMain.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObjects\Bullet.cpp" />
+    <ClCompile Include="src\GameObjects\Enemy.cpp" />
+    <ClCompile Include="src\GameObjects\Item.cpp" />
+    <ClCompile Include="src\GameObjects\Player.cpp" />
+    <ClCompile Include="src\level.cpp" />
+    <ClCompile Include="src\MenuOption.cpp" />
+    <ClCompile Include="src\States\StateChangeLevel.cpp" />
+    <ClCompile Include="src\States\StateFinish.cpp" />
+    <ClCompile Include="src\States\StateGame.cpp" />
+    <ClCompile Include="src\States\StateMainMenu.cpp" />
+    <ClCompile Include="src\States\StatePlay.cpp" />
+    <ClCompile Include="src\States\StateStartup.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\Engine\ControllerInput.hpp" />
+    <ClInclude Include="inc\Engine\Engine.hpp" />
+    <ClInclude Include="inc\Engine\GameState.hpp" />
+    <ClInclude Include="inc\Engine\Graphics.hpp" />
+    <ClInclude Include="inc\Engine\Input.hpp" />
+    <ClInclude Include="inc\Engine\Sprite.hpp" />
+    <ClInclude Include="inc\Engine\Timer.hpp" />
+    <ClInclude Include="inc\Engine\Vector3.hpp" />
+    <ClInclude Include="inc\Engine\WinMain.hpp" />
+    <ClInclude Include="inc\Game.hpp" />
+    <ClInclude Include="inc\GameObjects\Bullet.hpp" />
+    <ClInclude Include="inc\GameObjects\Enemy.hpp" />
+    <ClInclude Include="inc\GameObjects\Item.hpp" />
+    <ClInclude Include="inc\GameObjects\Player.hpp" />
+    <ClInclude Include="inc\level.hpp" />
+    <ClInclude Include="inc\MenuOption.hpp" />
+    <ClInclude Include="inc\States\StateChangeLevel.hpp" />
+    <ClInclude Include="inc\States\StateFinish.hpp" />
+    <ClInclude Include="inc\States\StateGame.hpp" />
+    <ClInclude Include="inc\States\StateMainMenu.hpp" />
+    <ClInclude Include="inc\States\StatePlay.hpp" />
+    <ClInclude Include="inc\States\StateStartup.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2DF61BBA-9272-4CA5-A0A1-7D2C681A1D4B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Game</RootNamespace>
+    <ProjectName>Sneak</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)\inc\States;$(ProjectDir)\inc\GameObjects;$(ProjectDir)\inc\Engine;$(ProjectDir)\inc;$(ProgramFiles)\Lua\5.1\include;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProgramFiles)\Lua\5.1\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ProgramFiles)\Lua\5.1\lib;$(ReferencePath)</ReferencePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua5.1.lib;dinput8.lib;d3d9.lib;d3dx9.lib;dxguid.lib;xinput.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

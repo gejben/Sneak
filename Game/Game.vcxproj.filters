@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Include files">
+      <UniqueIdentifier>{0c296869-0b5f-446c-9990-adfdb0cfdb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{3966b3a4-284d-4e20-b4f2-7fccb4a57551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{34f752ee-eb73-409e-8698-3794e39a007b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{dd4148c4-c894-4eca-be3f-ef24a3ba0777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include files\States">
+      <UniqueIdentifier>{e7e672ab-2b38-4ce7-8722-099430016d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include files\GameObjects">
+      <UniqueIdentifier>{a81d1af5-1c5c-4b62-a4af-0af26f392ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include files\Engine">
+      <UniqueIdentifier>{8cb86b63-7e1b-4ffd-99de-b15604e8d63a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Egnine\Graphics.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\Input.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\Sprite.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\Timer.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\Vector3.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\WinMain.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\ControllerInput.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\Engine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Egnine\GameState.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjects\Player.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjects\Bullet.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjects\Enemy.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\StateStartup.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\StateChangeLevel.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\StateFinish.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\StateGame.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\StateMainMenu.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\StatePlay.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjects\Item.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\Engine\ControllerInput.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\Engine.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\GameState.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\Graphics.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\Input.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\Sprite.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\Timer.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\Vector3.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Engine\WinMain.hpp">
+      <Filter>Include files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GameObjects\Bullet.hpp">
+      <Filter>Include files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GameObjects\Enemy.hpp">
+      <Filter>Include files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GameObjects\Player.hpp">
+      <Filter>Include files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\States\StateChangeLevel.hpp">
+      <Filter>Include files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\States\StateFinish.hpp">
+      <Filter>Include files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\States\StateGame.hpp">
+      <Filter>Include files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\States\StateMainMenu.hpp">
+      <Filter>Include files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\States\StatePlay.hpp">
+      <Filter>Include files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\States\StateStartup.hpp">
+      <Filter>Include files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Game.hpp">
+      <Filter>Include files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\level.hpp">
+      <Filter>Include files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\MenuOption.hpp">
+      <Filter>Include files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\GameObjects\Item.hpp">
+      <Filter>Include files\GameObjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
