@@ -14,10 +14,14 @@ private:
 public:
 	Player();
 	~Player();
-	void Init(const GejbEngine::Texture *texture);
+	void Init(const GejbEngine::Texture *texture, Level *level);
 	void Update() override;
 	void Collide(int objectType) override;
 	void CollideWithWall();
+
+	void Move() override;
+
+	void setLevel(Level *level){ currentLevel = level; }
 
 	void setYvelocity(int y){ setVelocity(getVelocity().getX(), y); }
 	void setXvelocity(int x){ setVelocity(x,getVelocity().getY()); }

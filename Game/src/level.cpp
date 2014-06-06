@@ -57,10 +57,10 @@ void Level::draw() {
 
 	for(int i = 0; i < 45; i++) {
 		for(int j = 0; j < 80; j++) {
-			if(map[j][i] == '1') {
+			if(map[j][i] == L_WALL) {
 				wall.color = 0xFFFFFFFF;
 				DrawTexture(&wall, j*wall.width, i*wall.height);
-			} else if(map[j][i] == 'f') {
+			} else if(map[j][i] == L_FINISH) {
 				wall.color = D3DCOLOR_RGBA(100, 100, 100, 255);
 				DrawTexture(&wall, j*wall.width, i*wall.height);
 			}
@@ -68,8 +68,34 @@ void Level::draw() {
 	}
 }
 
-char Level::getTile(double xPos, double yPos){
-	return map[(int)xPos / tilewidth][(int)yPos / tilewidth];
+char Level::getTile(double xPos, double yPos) const{
+	return map[(int)(xPos / tilewidth)][(int)(yPos / tilewidth)];
+}
+
+char Level::getTile(const GejbEngine::Vector3& position, const GejbEngine::Vector3& direction) const{
+	
+	int xPos = 0;
+	int yPos = 0;
+
+	if(direction.getY() > 0)
+	{
+		yPos = position.getY() + direction.getY() + tilewidth;
+	}
+	else
+	{
+		yPos = position.getY() + direction.getY();
+	}
+
+	if(direction.getX() > 0)
+	{
+		xPos = position.getX() + direction.getX() + tilewidth;
+	} else
+	{
+		xPos = position.getX() + direction.getX();
+	}
+
+
+	return map[(int)(xPos / tilewidth)][(int)(yPos / tilewidth)];
 }
 
 void Level::checkWallCollision(Player &p) {

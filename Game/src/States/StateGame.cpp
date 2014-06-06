@@ -54,7 +54,7 @@ bool StateGame::InitState() {
 
 	currentState = &states[NEXT_LEVEL];
 	changeLevel.setContinue(cont);
-	player.Init(&playerTexture);
+	player.Init(&playerTexture, currentLevel);
 	return true;
 }
 
@@ -88,6 +88,7 @@ int StateGame::UpdateState() {
 			break;
 		case GO_TO_PLAY:
 			changeState(PLAY);
+			player.setLevel(currentLevel);
 			player.setAlive(true);
 			GejbEngine::RegisterSprite(&player);
 			break;

@@ -67,7 +67,7 @@ void StatePlay::updateController(const XINPUT_STATE &controllerState) {
 }
 
 int StatePlay::UpdateState(){
-	currentLevel->checkWallCollision(*player);
+	//currentLevel->checkWallCollision(*player);
 
 	if(currentLevel->checkFinish(*player)) {
 		return GO_TO_NEXT_LEVEL;

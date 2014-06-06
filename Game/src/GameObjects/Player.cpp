@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include "Level.hpp"
 
 Player::Player():
 immortal(false){
@@ -7,7 +8,7 @@ immortal(false){
 Player::~Player() {
 }
 
-void Player::Init(const GejbEngine::Texture *texture) {
+void Player::Init(const GejbEngine::Texture *texture, Level *level) {
 	setTexture(texture);
 	setObjectType(PLAYER);
 	setColor(D3DCOLOR_RGBA(0, 255, 0, 255));
@@ -19,6 +20,7 @@ void Player::Init(const GejbEngine::Texture *texture) {
 	setFrameTimer(50);
 	UpdateBounds();
 	immortalTimer.resetStopwatch();
+	currentLevel = level;
 }
 
 void Player::Update() {
@@ -56,4 +58,21 @@ void Player::CollideWithWall() {
 	setPosition(getPosition() - getVelocity());
 	setVelocity(0, 0);
 	UpdateBounds();
+}
+
+void Player::Move(){
+	GejbEngine::Vector3 directionX(getVelocity().getX(),0);
+
+	GejbEngine::Vector3 directionY(0,getVelocity().getY());
+
+
+	if(currentLevel->getTile(getPosition(), directionX) == L_WALL){
+		setVelocity(0, getVelocity().getY());
+	}
+
+	if(currentLevel->getTile(getPosition(), directionY) == L_WALL){
+		setVelocity(getVelocity().getX(), 0);
+	}
+
+	Sprite::Move();
 }
