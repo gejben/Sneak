@@ -17,21 +17,30 @@ bool StatePlay::InitState(){
 	player = &game->getPlayer();
 	currentLevel = game->getCurrentLevel();
 	player->setPosition(currentLevel->getStartingPoint());
+
+	if(!GejbEngine::LoadSprite("Resources/Images/bg.png", background))
+	{
+		GejbEngine::FatalError("Failed to initialize background Texture");
+		return false;
+	}
+	background.color = D3DCOLOR_RGBA(0, 0, 255, 255);
+
 	return true;
 }
 
 void StatePlay::KeyPressed(int key){
+	const int playerspeed = 4;
 	if(key == DIK_UP) {
-		player->setYvelocity(-4);
+		player->setNextVelocity(0, -playerspeed);
 	}
 	if(key == DIK_DOWN) {
-		player->setYvelocity(4);
+		player->setNextVelocity(0, playerspeed);
 	}
 	if(key == DIK_LEFT) {
-		player->setXvelocity(-4);
+		player->setNextVelocity(-playerspeed, 0);
 	}
 	if(key == DIK_RIGHT) {
-		player->setXvelocity(4);
+		player->setNextVelocity(playerspeed, 0);
 	}
 	if(key == DIK_ESCAPE) {
 	}
@@ -70,6 +79,7 @@ int StatePlay::UpdateState(){
 	//currentLevel->checkWallCollision(*player);
 
 	if(currentLevel->checkFinish(*player)) {
+
 		return GO_TO_NEXT_LEVEL;
 	}
 	if(player->getAlive() == false) {
@@ -82,8 +92,9 @@ int StatePlay::UpdateState(){
 
 void StatePlay::Draw(){
 	currentLevel->draw();
+	GejbEngine::DrawTexture(&background, 0, 0);
 }
 
 void StatePlay::ShutdownState(){
-
+	GejbEngine::ReleaseTexture(&background);
 }

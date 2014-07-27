@@ -12,9 +12,10 @@ class StateGame;
 
 
 enum TileTypes{
-	L_FLOOR  = '0',
-	L_WALL	 = '1',
-	L_FINISH = 'f'
+	L_FLOOR		= '0',
+	L_ENEMY		= 'e',
+	L_WALL		= '1',
+	L_FINISH	= 'f'
 };
 
 class Level {

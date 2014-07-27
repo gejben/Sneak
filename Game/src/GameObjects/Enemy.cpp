@@ -5,10 +5,11 @@
 #include "lua.hpp"
 #include <math.h>
 #include <memory.h>
+#include <algorithm>
+#include <stdio.h>
 
 const double M_PI = 3.14159265358979323846;
 
-using namespace GejbEngine;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -16,35 +17,67 @@ double Enemy::radToDeg(double rad) {
 	return rad*(180 / M_PI);
 }
 
-int lua_checkWallCollision(lua_State *lua){
+int lua_checkForPlayer(lua_State *lua){
 	int id = lua_tointeger(lua, 1);
 	Enemy* enemy = game_getEnemyById(id);
 	if(enemy != nullptr){
+		lua_pushboolean(lua, enemy->getPlayerFound());
+		return 1;
+	}
+	lua_pushboolean(lua, false);
+	return 1;
+}
+
+int lua_chase(lua_State *lua){
+	int id = lua_tointeger(lua, 1);
+	Enemy *enemy = game_getEnemyById(id);
+
+	if(enemy != nullptr){
+		enemy->chase();
 		lua_pushboolean(lua, true);
-		lua_pushboolean(lua, enemy->checkWallCollision());
-	} else{	//don't really know how to solve this in another way
-		lua_pushboolean(lua, false);
-		lua_pushboolean(lua, false);
+		return 1;
 	}
-	return 2;
+	lua_pushboolean(lua, false);
+	return 1;
 }
 
-int lua_collideWall(lua_State *lua){
+int lua_pathFind(lua_State *lua){
 	int id = lua_tointeger(lua, 1);
-	Enemy* enemy = game_getEnemyById(id);
+	Enemy *enemy = game_getEnemyById(id);
+
 	if(enemy != nullptr){
-		enemy->CollideWithWall();
+		
+		enemy->pathFind();
+		lua_pushboolean(lua, true);
+		return 1;
 	}
-	return 0;
+	lua_pushboolean(lua, false);
+	return 1;
 }
 
-int lua_resetSteps(lua_State *lua){
+int lua_nextTile(lua_State *lua){
 	int id = lua_tointeger(lua, 1);
-	Enemy* enemy = game_getEnemyById(id);
+	Enemy *enemy = game_getEnemyById(id);
+
 	if(enemy != nullptr){
-		enemy->ResetSteps();
+		enemy->nextTile();
+		lua_pushboolean(lua, true);
+		return 1;
 	}
-	return 0; 
+	lua_pushboolean(lua, false);
+	return 1;
+}
+
+int lua_returnedToStart(lua_State *lua){
+	int id = lua_tointeger(lua, 1);
+	Enemy *enemy = game_getEnemyById(id);
+
+	if(enemy != nullptr){
+		lua_pushboolean(lua, enemy->atStartPos());
+		return 1;
+	}
+	lua_pushboolean(lua, false);
+	return 1;
 }
 
 Enemy::Enemy(Level *const l, StateGame *g, int eId):
@@ -58,7 +91,8 @@ xVel(0),
 bulletSpeed(7),
 game(g),
 steps(0),
-enemyId(eId){
+enemyId(eId),
+startPos(0,0){
 	lua = luaL_newstate();
 	luaL_openlibs(lua);
 }
@@ -67,9 +101,10 @@ Enemy::~Enemy() {
 	lua_close(lua);
 }
 
-void Enemy::Init(const GejbEngine::Texture *enemyTexture){
+void Enemy::Init(const GejbEngine::Texture *enemyTexture, double x, double y){
 	setTexture(enemyTexture);
-
+	startPos.Set(x, y);
+	setPosition(x, y);
 	yVel = -speed;
 	xVel = 0;
 
@@ -97,33 +132,43 @@ void Enemy::Init(const GejbEngine::Texture *enemyTexture){
 	lua_pushinteger(lua, enemyId);
 	lua_setglobal(lua, "enemyId");
 
-	lua_register(lua, "checkCollision", lua_checkWallCollision);
-	lua_register(lua, "resetSteps", lua_resetSteps);
-	lua_register(lua, "collide", lua_collideWall);
+	lua_register(lua, "checkForPlayer", lua_checkForPlayer);
+	lua_register(lua, "chase", lua_chase);
+	lua_register(lua, "searchStartpos", lua_pathFind);
+	lua_register(lua, "nextTile", lua_nextTile);
+	lua_register(lua, "returnedToStart", lua_returnedToStart);
 }
+
+enum States{
+	PATROLLING = 0,
+	CHASING = 1,
+	RETURNING = 2
+};
 
 void Enemy::Update() {
 	checkForPlayer(&game->getPlayer());
-
-	/* the function name */
-	lua_getglobal(lua, "update");
-
-	lua_call(lua, 0, 0);
-
-	if(playerFound) {
-		setRotation(rotationToPlayer);
-		setCurrentRow(1);
-		setCurrentColumn(0);
-		setAnimated(false);
-		if(readyToFire) {
-			game->CreateBullet(bulletSpeed, getPosition(), rotationToPlayer);
-			readyToFire = false;
-			reloadTimer.resetStopwatch();
-		}
-	} else {
-		setRotation(atan2(getVelocity().getY(), getVelocity().getX()));
-		setCurrentRow(0);
-		setAnimated(true);
+	switch(state){
+		case PATROLLING:
+			setRotation(atan2(getVelocity().getY(), getVelocity().getX()));
+			setCurrentRow(0);
+			setAnimated(true);
+			break;
+		case CHASING:
+			setRotation(atan2(getVelocity().getY(), getVelocity().getX()));
+			setCurrentRow(1);
+			setCurrentColumn(0);
+			setAnimated(false);
+			if(readyToFire) {
+				game->CreateBullet(bulletSpeed, getPosition()+getVelocity(), rotationToPlayer);
+				readyToFire = false;
+				reloadTimer.resetStopwatch();
+			}
+			break;
+		case RETURNING:
+			setRotation(atan2(getVelocity().getY(), getVelocity().getX()));
+			setCurrentRow(0);
+			setAnimated(true);
+			break;
 	}
 
 	if(reloadTimer.stopwatch(1000)) {
@@ -133,75 +178,119 @@ void Enemy::Update() {
 }
 
 bool Enemy::checkWallCollision(void){
-	double yVel = (getVelocity().getY() != 0) ? (getVelocity().getY() / abs(getVelocity().getY())) : 0;
-	double xVel = (getVelocity().getX() != 0) ? (getVelocity().getX() / abs(getVelocity().getX())) : 0;
+	GejbEngine::Vector3 directionX(getVelocity().getX(), 0);
 
-	if(xVel > 0){
-		if(level->getTile((getPosition().getX() + (xVel*getFrameWidth())), getPosition().getY()) ==
-			 '1') {
-			return true;
-		} else{
-			return false;
-		}
-	} else if(xVel < 0){
-		if(level->getTile(getPosition().getX(), getPosition().getY()) == '1') {
-			return true;
-		} else{
-			return false;
-		}
-	} else if(yVel > 0){
-		if(level->getTile(getPosition().getX() + (getFrameWidth() / 2), (getPosition().getY() + yVel * getFrameHeight())) == '1') {
-			return true;
-		} else{
-			return false;
-		}
-	} else if(yVel < 0){
-		if(level->getTile(getPosition().getX() + (getFrameWidth() / 2), (getPosition().getY() + (yVel * getFrameHeight() / 2))) == '1') {
-			return true;
-		} else{
-			return false;
-		}
+	GejbEngine::Vector3 directionY(0, getVelocity().getY());
+
+
+	if(level->getTile(getPosition(), directionX) == L_WALL){
+		CollideWithWall();
 	}
+
+	if(level->getTile(getPosition(), directionY) == L_WALL){
+		CollideWithWall();
+	}
+
+	return true;
 }
 
 void Enemy::CollideWithWall() {
-	setPosition(getPosition() - getVelocity());
-
 	setVelocity(-getVelocity().getY(), getVelocity().getX());
 }
 
 void Enemy::Collide(int objectType) {
 	switch(objectType) {
 		case 1:
-			setAlive(false);
+			//setAlive(false);
 			break;
 		default:
 			break;
 	}
-
 }
 
-void Enemy::Move(){
-	if(playerFound == false){
-		Sprite::Move();
-		steps += getVelocity().Length();
-		lua_pushinteger(lua, steps);
-		lua_setglobal(lua, "steps");
-	}
+bool Enemy::Move(){
+	if(steps == tilewidth){
 
+		checkWallCollision();
+
+		/* the function name */
+		lua_getglobal(lua, "update");
+
+		int result = lua_pcall(lua, 0, 1, 0);
+
+		if(result != 0){
+			std::string str = "Error in enemy.lua update function:\n";
+			str.append(lua_tostring(lua, -1));
+			GejbEngine::FatalError(str);
+		}
+
+		state = lua_tonumber(lua, -1);
+
+		steps = 0;
+	}
+	if(Sprite::Move()){
+		steps += getVelocity().Length();
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+bool Enemy::atStartPos(){
+	if(getPosition() == startPos){
+		setVelocity(0, -speed);
+		return true;
+	}
+	return false;
+}
+
+void Enemy::chase(){
+	GejbEngine::Vector3 playerPos(game->getPlayer().getPosition());
+	GejbEngine::Vector3 directionVector((getPosition() - playerPos));
+	double dirX(directionVector.getX());
+	double dirY(directionVector.getY());
+
+	if(abs(dirX) >= abs(dirY)){
+		if(dirX > 0) setVelocity(-speed, 0);
+		else setVelocity(speed, 0);
+	} else{
+		if(dirY > 0) setVelocity(0, -speed);
+		else setVelocity(0, speed);
+	}
+}
+
+void Enemy::nextTile(){
+	if(getPosition() != startPos){
+		GejbEngine::Vector3 directionVector((getPosition() - *path.begin()).Normal());
+
+		double dirX(directionVector.getX());
+		double dirY(directionVector.getY());
+
+		if(abs(dirX) >= abs(dirY)){
+			if(dirX > 0) setVelocity(-speed, 0);
+			else setVelocity(speed, 0);
+		} else{
+			if(dirY > 0) setVelocity(0, -speed);
+			else setVelocity(0, speed);
+		}
+
+		path.pop_front();
+	}
+	else setVelocity(0, 0);
 }
 
 void Enemy::checkForPlayer(Player *player) {
 
 	GejbEngine::Vector3 playerPos = player->getPosition();
 
-	if(getPosition().Distance(player->getPosition()) < 275) {
+	if(getPosition().Distance(player->getPosition()) < 150) {
 
 		rotationToPlayer = atan2(playerPos.getY() - getPosition().getY(),
 														 playerPos.getX() - getPosition().getX());
 
-		if(radToDeg(getRotation()) - radToDeg(rotationToPlayer) <= 60
-			 && radToDeg(getRotation()) - radToDeg(rotationToPlayer) >= -60) {
+		if(radToDeg(getRotation()) - radToDeg(rotationToPlayer) <= 50
+			 && radToDeg(getRotation()) - radToDeg(rotationToPlayer) >= -50) {
 			if(level->testForWall(getPosition(), player->getPosition()) == false) {
 				playerFound = true;
 			} else {
@@ -212,3 +301,86 @@ void Enemy::checkForPlayer(Player *player) {
 		playerFound = false;
 	}
 }
+
+bool Enemy::tileSorter(shared_ptr<TileState> const lhs, shared_ptr<TileState> const rhs){
+	return lhs->f < rhs->f;
+}
+
+double Enemy::lengthToGoal(GejbEngine::Vector3 pos){
+	return pos.Distance(startPos);
+}
+
+
+void Enemy::testDirection(GejbEngine::Vector3 pos, shared_ptr<TileState> state){
+	bool previouslyVisited = false;
+	for each(shared_ptr<TileState> state in visited){
+		if(pos == state->position){
+			previouslyVisited = true;
+			break;
+		}
+	}
+	if(previouslyVisited == false){
+		shared_ptr<TileState> newState = make_shared<TileState>();
+		newState->position = pos;
+		newState->parentState = state;
+		newState->g = newState->parentState->g + 1;
+		newState->h = lengthToGoal(pos);
+		newState->f = newState->g + newState->h;
+		open.push_back(newState);
+		visited.push_back(newState);
+
+		double bajs = newState->h;
+	}
+}
+
+
+void Enemy::checkSurrounding(shared_ptr<TileState> state){
+
+	GejbEngine::Vector3 direction(tilewidth, 0);
+	if(level->getTile(state->position, direction) != L_WALL){
+		testDirection((state->position + direction), state);
+	}
+
+	direction = GejbEngine::Vector3(-tilewidth, 0);
+	if(level->getTile(state->position, direction) != L_WALL){
+		testDirection((state->position + direction), state);
+	}
+
+	direction = GejbEngine::Vector3(0, tilewidth);
+	if(level->getTile(state->position, direction) != L_WALL){
+		testDirection((state->position + direction), state);
+	}
+
+	direction = GejbEngine::Vector3(0, -tilewidth);
+	if(level->getTile(state->position, direction) != L_WALL){
+		testDirection((state->position + direction), state);
+	}
+
+
+	std::sort(open.begin(), open.end(), &tileSorter);
+	int size = open.size();
+}
+
+void Enemy::pathFind(){
+	setVelocity(GejbEngine::Vector3(0, 0));
+	open.clear();
+	visited.clear();
+	path.clear();
+	open.push_back(make_shared<TileState>());
+	open.at(0)->position = getPosition();
+	while(path.size() == 0){
+		shared_ptr<TileState> pState = open.at(0);
+		open.erase(open.begin());
+		checkSurrounding(pState);
+		if(pState->position == startPos){
+			GejbEngine::Vector3 position = pState->position;
+			shared_ptr<TileState> tempState = pState;
+			while(position != getPosition()){
+				path.push_front(position);
+				tempState = tempState->parentState;
+				position = tempState->position;
+			}
+		}
+	}
+}
+

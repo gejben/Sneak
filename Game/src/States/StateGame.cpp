@@ -21,9 +21,9 @@ finish(this),
 player(),
 cont(false),
 enemyList(){
-	states[0] = &play;
-	states[1] = &changeLevel;
-	states[2] = &finish;
+	states[PLAY] = &play;
+	states[NEXT_LEVEL] = &changeLevel;
+	states[FINISHED] = &finish;
 }
 
 StateGame::~StateGame() {
@@ -120,8 +120,7 @@ void StateGame::CreateEnemy(double x, double y){
 	static int enemyId = 0;
 	++enemyId;
 	Enemy *enemy = new Enemy(currentLevel, this, enemyId);
-	enemy->setPosition(x, y);
-	enemy->Init(&enemyTexture);
+	enemy->Init(&enemyTexture,x,y);
 	GejbEngine::RegisterSprite(enemy);
 	enemyList.push_back(enemy);
 }

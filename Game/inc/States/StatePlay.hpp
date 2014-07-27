@@ -2,6 +2,7 @@
 #define STATEPLAY_HPP
 
 #include "GameState.hpp"
+#include "Graphics.hpp"
 
 class StateGame;
 class Player;
@@ -12,6 +13,7 @@ private:
 	StateGame *game;
 	Player *player;
 	Level *currentLevel;
+	GejbEngine::Texture background;
 public:
 	StatePlay(const StateGame*);
 	~StatePlay();

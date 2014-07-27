@@ -10,7 +10,11 @@ class Player : public GejbEngine::Sprite{
 private:
 	Level *currentLevel;
 	bool immortal;
+	int steps;
+	const int tileWidth = 16;
 	GejbEngine::Timer immortalTimer;
+	GejbEngine::Timer waitTimer;
+	GejbEngine::Vector3 nextVelocity;
 public:
 	Player();
 	~Player();
@@ -19,12 +23,13 @@ public:
 	void Collide(int objectType) override;
 	void CollideWithWall();
 
-	void Move() override;
+	bool Move() override;
 
 	void setLevel(Level *level){ currentLevel = level; }
 
-	void setYvelocity(int y){ setVelocity(getVelocity().getX(), y); }
-	void setXvelocity(int x){ setVelocity(x,getVelocity().getY()); }
+	void setYvelocity(int y){ nextVelocity.setY(y);}
+	void setXvelocity(int x){ nextVelocity.setX(x); }
+	void setNextVelocity(int x, int y){ nextVelocity.Set(x, y); }
 };
 
 #endif

@@ -109,7 +109,8 @@ namespace GejbEngine {
 	}
 
 
-	void Sprite::Move() {
+	bool Sprite::Move() {
+		bool retval = true;
 		if(movetimer > 0) {
 			if(timeGetTime() > (DWORD)(movestart + movetimer)) {
 				//reset move timer
@@ -119,6 +120,9 @@ namespace GejbEngine {
 				this->setX(this->getX() + this->velocity.getX());
 				this->setY(this->getY() + this->velocity.getY());
 			}
+			else{
+				retval = false;
+			}
 		} else {
 			//no movement timer--update at cpu clock speed
 			this->setX(this->getX() + this->velocity.getX());
@@ -126,6 +130,7 @@ namespace GejbEngine {
 		}
 
 		UpdateBounds();
+		return retval;
 	}
 
 	void Sprite::UpdateBounds() {

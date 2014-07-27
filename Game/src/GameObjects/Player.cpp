@@ -2,7 +2,8 @@
 #include "Level.hpp"
 
 Player::Player():
-immortal(false){
+immortal(false),
+nextVelocity(0,0){
 }
 
 Player::~Player() {
@@ -20,7 +21,10 @@ void Player::Init(const GejbEngine::Texture *texture, Level *level) {
 	setFrameTimer(50);
 	UpdateBounds();
 	immortalTimer.resetStopwatch();
+	waitTimer.resetStopwatch();
 	currentLevel = level;
+	setAnimated(false);
+
 }
 
 void Player::Update() {
@@ -29,12 +33,8 @@ void Player::Update() {
 			immortal = false;
 		}
 	}
-	if(getXvelocity() || getYvelocity()) {
-		setRotation(atan2(getYvelocity(), getXvelocity()));
-		setAnimated(true);
-		setVelocity(GejbEngine::Vector3(0, 0, 0));
-	} else {
-		setAnimated(false);
+	if(nextVelocity.getY() || nextVelocity.getX()) {
+		setRotation(atan2(nextVelocity.getY(), nextVelocity.getX()));
 	}
 }
 
@@ -60,19 +60,28 @@ void Player::CollideWithWall() {
 	UpdateBounds();
 }
 
-void Player::Move(){
-	GejbEngine::Vector3 directionX(getVelocity().getX(),0);
+bool Player::Move(){
 
-	GejbEngine::Vector3 directionY(0,getVelocity().getY());
+	if(Sprite::Move()){
+		steps += getVelocity().Length();
+		if(steps == tileWidth || steps == 0){
+			setVelocity(0, 0);
 
 
-	if(currentLevel->getTile(getPosition(), directionX) == L_WALL){
-		setVelocity(0, getVelocity().getY());
+			setAnimated(false);
+				if(currentLevel->getTile(getPosition(), nextVelocity) == L_WALL){
+					setVelocity(0, 0);
+				} else if(nextVelocity.getX() || nextVelocity.getY()){
+					OutputDebugString("move");
+					setVelocity(nextVelocity);
+					nextVelocity.Set(0, 0);
+				}
+			steps = 0;
+		} else{
+				setAnimated(true);
+		}
+
+		return true;
 	}
-
-	if(currentLevel->getTile(getPosition(), directionY) == L_WALL){
-		setVelocity(getVelocity().getX(), 0);
-	}
-
-	Sprite::Move();
+	return false;
 }

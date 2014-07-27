@@ -27,7 +27,6 @@ bool Level::init(std::string filename, StateGame *game) {
 	if(!LoadTexture("Resources/Images/wall.png", &wall)){
 		return false;
 	}
-	wall.color = 0xFFFFFFFF;
 	char ch;
 	int i = 0, j = 0;
 	std::ifstream fin(filename);
@@ -38,8 +37,8 @@ bool Level::init(std::string filename, StateGame *game) {
 			i++; j = 0;
 		} else {
 			map[j][i] = ch;
-			if(ch == 'e') {
-					game->CreateEnemy(j*wall.width, i*wall.height);
+			if(ch == L_ENEMY) {
+				game->CreateEnemy(j*wall.width, i*wall.height);
 			} else if(ch == 'i'){
 				game->CreateItem(j*wall.width, i*wall.height);
 			}else if(ch == 's') {
@@ -54,11 +53,10 @@ bool Level::init(std::string filename, StateGame *game) {
 }
 
 void Level::draw() {
-
 	for(int i = 0; i < 45; i++) {
 		for(int j = 0; j < 80; j++) {
 			if(map[j][i] == L_WALL) {
-				wall.color = 0xFFFFFFFF;
+				wall.color = D3DCOLOR_RGBA(0, 255, 0, 255);
 				DrawTexture(&wall, j*wall.width, i*wall.height);
 			} else if(map[j][i] == L_FINISH) {
 				wall.color = D3DCOLOR_RGBA(100, 100, 100, 255);
@@ -77,18 +75,18 @@ char Level::getTile(const GejbEngine::Vector3& position, const GejbEngine::Vecto
 	int xPos = 0;
 	int yPos = 0;
 
-	if(direction.getY() > 0)
+	if(direction.getY() >= 0)
 	{
-		yPos = position.getY() + direction.getY() + tilewidth;
+		yPos = position.getY() + direction.getY() + tilewidth -4;
 	}
 	else
 	{
 		yPos = position.getY() + direction.getY();
 	}
 
-	if(direction.getX() > 0)
+	if(direction.getX() >= 0)
 	{
-		xPos = position.getX() + direction.getX() + tilewidth;
+		xPos = position.getX() + direction.getX() + tilewidth -4;
 	} else
 	{
 		xPos = position.getX() + direction.getX();

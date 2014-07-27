@@ -47,7 +47,7 @@ namespace GejbEngine {
 		Sprite();
 		~Sprite();
 		void Animate();
-		virtual void Move();
+		virtual bool Move();
 		void UpdateBounds();
 
 		virtual void Update();
